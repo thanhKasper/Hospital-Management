@@ -1,19 +1,12 @@
-'use client'
+"use client";
 
 import React from "react";
 import { useState } from "react";
 
 const FilterSearch = () => {
-    const [isDropdown, setDropdown] = useState(false);
-    // Filter by patient: Filter By Patient, by doctor: Filter By Doctor
-    const [filterCriteria, setFilterCriteria] = useState("Filter By Patient")
-
-  /* For some reason, tailwindcss cannot apply some styling, this stylings replace that */
-  const style = {
-    borderStartStartRadius: "1.5rem",
-    borderEndStartRadius: "1.5rem",
-    height: "100%"
-  };
+  const [isDropdown, setDropdown] = useState(false);
+  // Filter by patient: Filter By Patient, by doctor: Filter By Doctor
+  const [filterCriteria, setFilterCriteria] = useState("Filter By Patient");
 
   const selectionStyle = {
     position: "absolute",
@@ -21,14 +14,13 @@ const FilterSearch = () => {
     width: "100%",
     borderRadius: "0.5rem",
     padding: "0.5rem 0.75rem 0.5rem 0.75rem",
-    display: isDropdown ? "block" : "none" 
-  }
+    display: isDropdown ? "block" : "none",
+  };
 
   return (
     <div className="relative" style={{ position: "relative" }}>
       <div
         className="px-4 h-full flex bg-[#3A4EFD] items-center gap-3 rounded-s-3xl"
-        style={style}
         onClick={() => {
           setDropdown(oldState => !oldState);
         }}
@@ -46,24 +38,11 @@ const FilterSearch = () => {
         </svg>
       </div>
       <ul
-        className="absolute bg-[#F5F5F5] rounded-xl pl-4"
+        className="absolute bg-[#F5F5F5] rounded-xl pl-4 z-30"
         style={selectionStyle}
       >
         <li
-          style={{
-            padding: "0.25rem",
-            borderRadius: "0.25rem",
-            marginBottom: "0.5rem",
-            cursor: "default",
-          }}
-          onMouseOver={e => {
-            e.target.style.backgroundColor = "#3A4EFD";
-            e.target.style.color = "white";
-          }}
-          onMouseOut={e => {
-            e.target.style.backgroundColor = "inherit";
-            e.target.style.color = "black";
-          }}
+          className="p-1 rounded-md mb-2 cursor-default hover:bg-primary hover:text-white"
           onClick={() => {
             setFilterCriteria("Filter By Patient");
             setDropdown(false);
@@ -72,19 +51,7 @@ const FilterSearch = () => {
           Filter By Patient
         </li>
         <li
-          style={{
-            padding: "0.25rem",
-            borderRadius: "0.25rem",
-            cursor: "default",
-          }}
-          onMouseOver={e => {
-            e.target.style.backgroundColor = "#3A4EFD";
-            e.target.style.color = "white";
-          }}
-          onMouseOut={e => {
-            e.target.style.backgroundColor = "inherit";
-            e.target.style.color = "black";
-          }}
+          className="p-1 rounded-md mb-2 cursor-default hover:bg-primary hover:text-white"
           onClick={() => {
             setFilterCriteria("Filter By Doctor");
             setDropdown(false);

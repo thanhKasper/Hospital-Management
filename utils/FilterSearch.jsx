@@ -50,11 +50,11 @@ const FilterSearch = () => {
         style={selectionStyle}
       >
         <li
-          className="hover:bg-[#3A4EFD] hover:text-white"
           style={{
             padding: "0.25rem",
             borderRadius: "0.25rem",
             marginBottom: "0.5rem",
+            cursor: "default",
           }}
           onMouseOver={e => {
             e.target.style.backgroundColor = "#3A4EFD";
@@ -72,7 +72,11 @@ const FilterSearch = () => {
           Filter By Patient
         </li>
         <li
-          style={{ padding: "0.25rem", borderRadius: "0.25rem" }}
+          style={{
+            padding: "0.25rem",
+            borderRadius: "0.25rem",
+            cursor: "default",
+          }}
           onMouseOver={e => {
             e.target.style.backgroundColor = "#3A4EFD";
             e.target.style.color = "white";

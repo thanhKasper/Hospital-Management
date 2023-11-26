@@ -1,23 +1,28 @@
-import Image from "next/image";
+'use client'
+
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div className="h-[100vh] flex flex-col">
       <nav className="bg-primary px-10 flex justify-between items-center py-2">
         <div className="flex gap-16 items-center">
           <p className="text-yellow-500 text-3xl font-semibold">G7 Hospital</p>
-          <a href="" className="font-semibold text-white">
+          <Link href="./patients" className="font-semibold text-white">
             Dashboard
-          </a>
+          </Link>
         </div>
         <div className="flex items-center gap-6">
-          <a href="" className="font-semibold text-white">
+          <Link href="./login" className="font-semibold text-white">
             Sign In
-          </a>
-          <a href="" className="font-semibold text-white">
+          </Link>
+          <Link href="./" className="font-semibold text-white">
             Sign Up
-          </a>
+          </Link>
         </div>
       </nav>
       <main className="flex flex-col justify-center items-center grow bg-cover bg-[url('/homepage_img.png')]">
@@ -29,7 +34,7 @@ export default function Home() {
           vivamus pellentesque maecenas natoque. Enim pellentesque et faucibus
           mauris.
         </p>
-        <button className="bg-yellow-500 px-6 py-2 mt-9 font-semibold text-xl rounded-lg">Get Started</button>
+        <Button onClick={() => {router.push('./patients/')}} className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold text-1xl mt-8">Get Started</Button>
       </main>
     </div>
   );

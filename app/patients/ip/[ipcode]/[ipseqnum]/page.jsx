@@ -7,7 +7,7 @@ import { useState } from 'react'
 
 const InpatientPage = () => {
   const [navActive, setnavActive] = useState('Patient')
-  const headerList = ["IPCode", "Start date", "End date", "Status"];
+  const headerList = ["IPCode", "Start date", "End date", "Status", ""];
   return (
     <section className='flex'>
       <Sidebar curNav={navActive} onSetActive={setnavActive} />

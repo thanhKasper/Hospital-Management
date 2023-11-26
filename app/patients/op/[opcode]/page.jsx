@@ -13,7 +13,7 @@ import {
 
 const InpatientPage = () => {
   const [navActive, setnavActive] = useState('Patient')
-  const headerList = ['IPCode', 'Admission date', 'Discharge date', 'Fee']
+  const headerList = ['OPCode', 'Exam Date', 'Next Exam Date', 'Fee']
   return (
     <section className='flex'>
       <Sidebar curNav={navActive} onSetActive={setnavActive} />
@@ -74,11 +74,11 @@ const InpatientPage = () => {
           <h2 className='text-4xl font-semibold'>History</h2>
           <Select>
             <SelectTrigger className='w-[120px] rounded-full bg-primary text-white font-bold focus-visible:ring-primary'>
-              <SelectValue placeholder='Inpatient' />
+              <SelectValue placeholder='Outpatient'/>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='Inpatient'>Inpatient</SelectItem>
               <SelectItem value='Outpatient'>Outpatient</SelectItem>
+              <SelectItem value='Inpatient'>Inpatient</SelectItem>
             </SelectContent>
           </Select>
         </div>

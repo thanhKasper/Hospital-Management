@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from './ui/button'
 import { Input } from './ui/input'
 import {
   Select,
@@ -70,6 +71,9 @@ const AddPatientForm = () => {
         </label>
         <Input />
       </div>
+      <Button className='w-fit self-end' size='lg'>
+        Submit
+      </Button>
     </form>
   )
 }

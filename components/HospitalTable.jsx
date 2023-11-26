@@ -62,7 +62,7 @@ const HospitalTable = ({ headerList,  }) => {
         <TableHeader>
           <TableRow>
             {headerList.map((ele, idx) => (
-              <TableHead key={idx} className="font-semibold text-lg">
+              <TableHead key={idx} className="font-semibold text-lg text-blue-900">
                 {ele}
               </TableHead>
             ))}

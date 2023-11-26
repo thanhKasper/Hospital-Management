@@ -9,7 +9,7 @@ import HospitalTable from '@/components/HospitalTable';
 const PatientPage = () => {
   {/* navActive has these value: "Doctor", "Nurse", "Patient" */ }
   const [navActive, setnavActive] = useState("Patient");
-  const headerList = ["SSN", "Fullname", "Birth Date", "Gender"];
+  const headerList = ["SSN", "Fullname", "Birth Date", "Gender", ""];
 
   const testServer = async () => {
     const res = await fetch("/api/new-patient")

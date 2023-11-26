@@ -55,14 +55,17 @@ const invoices = [
   },
 ];
 
-const HospitalTable = ({ headerList,  }) => {
+const HospitalTable = ({ headerList }) => {
   return (
-    <div className="mt-9">
+    <div className="mt-2">
       <Table>
         <TableHeader>
           <TableRow>
             {headerList.map((ele, idx) => (
-              <TableHead key={idx} className="font-semibold text-lg text-blue-900">
+              <TableHead
+                key={idx}
+                className="font-semibold text-lg text-primary"
+              >
                 {ele}
               </TableHead>
             ))}

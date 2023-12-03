@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Link from "next/link";
 
 const invoices = [
   {
@@ -80,14 +81,13 @@ const HospitalTable = ({ headerList, contents, links }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map(invoice => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell>{invoice.totalAmount}</TableCell>
+          {contents.map(ele => (
+            <TableRow key={ele[0]}>
+              {ele.map(info => (
+                <TableCell key={info}>{info}</TableCell>
+              ))}
               <TableCell className="flex justify-end">
-                <button className="flex items-center gap-2 bg-primary text-white font-semibold px-2 py-1 rounded-full">
+                <Link href={`http://localhost:3000/patients/op/${ele[0]}`} className="flex items-center gap-2 bg-primary text-white font-semibold px-2 py-1 rounded-full">
                   Detail
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +99,7 @@ const HospitalTable = ({ headerList, contents, links }) => {
                       d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"
                     />
                   </svg>
-                </button>
+                </Link>
               </TableCell>
             </TableRow>
           ))}

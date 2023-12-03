@@ -4,6 +4,7 @@ import React from "react";
 import Sidebar from "@/components/sidebar";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import SearchBar from "@/components/SearchBar";
 import HospitalTable from "@/components/HospitalTable";
 
@@ -13,7 +14,25 @@ const PatientPage = () => {
     /* navActive has these value: "Doctor", "Nurse", "Patient" */
   }
   const [navActive, setnavActive] = useState("Patient");
+  const [patientList, setPatientList] = useState([]);
+  const [patientDetailLinks, setPatientDetailLinks] = useState()
   const headerList = ["SSN", "Fullname", "Birth Date", "Gender", ""];
+
+  useEffect(() => {
+    async function getPatients() {
+      const res = await axios.get("http://localhost:3000/api/patients");
+      const query = res.data.query
+      console.log(query)
+      const modifiedArr = []
+      for (let patient of query) {
+        modifiedArr.push([patient.PSSN, patient.Fullname, patient.BirthDate, patient.Gender])
+      }
+      console.log(modifiedArr)
+      setPatientList(modifiedArr);
+    }
+
+    getPatients();
+  }, []);
 
   return (
     <div className="flex">
@@ -31,7 +50,7 @@ const PatientPage = () => {
           </button>
         </div>
         <SearchBar />
-        <HospitalTable headerList={headerList} />
+        <HospitalTable headerList={headerList} contents={patientList} />
       </div>
     </div>
   );

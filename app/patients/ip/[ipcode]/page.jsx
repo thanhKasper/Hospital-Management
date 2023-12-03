@@ -13,7 +13,46 @@ import {
 
 const InpatientPage = () => {
   const [navActive, setnavActive] = useState('Patient')
-  const headerList = ['IPCode', 'Admission date', 'Discharge date', 'Fee']
+  const headerList = ['IPCode', 'Admission date', 'Discharge date', 'Fee', '']
+  const [patientInfo, setPatientInfo] = useState({});
+  const [treatmentList, setTreatmentList] = useState([]);
+  useEffect(() => {
+    let opCode, ipCode;
+    async function retrievePatientInfo({ params }) {
+      const code = params.ipcode;
+      const result = await axios.get(
+        `http://localhost:3000/api/getPatient?id=${code}`
+      );
+      const patientInfo = result.data.query[0];
+      opCode = result.data.opCode;
+      ipCode = result.data.ipCode;
+      patientInfo.ipCode = ipCode;
+      patientInfo.opCode = opCode;
+      setPatientInfo(patientInfo);
+    }
+
+    async function getExaminationDetail() {
+      const res = await axios.get(
+        `http://localhost:3000/api/examinations?ipCode=${ipCode}`
+      );
+      console.log(res.data.query);
+      const formattedExaminationList = [];
+      for (let examination of res.data.query) {
+        formattedExaminationList.push([
+          examination.ExaminationOPID,
+          examination.Date,
+          examination.NextDate,
+          examination.Fee,
+        ]);
+      }
+      console.log(formattedExaminationList);
+      setExaminationList(formattedExaminationList);
+    }
+
+    retrievePatientInfo().then(getExaminationDetail);
+  }, []);
+
+
   return (
     <section className='flex'>
       <Sidebar curNav={navActive} onSetActive={setnavActive} />
@@ -82,7 +121,7 @@ const InpatientPage = () => {
             </SelectContent>
           </Select>
         </div>
-        <HospitalTable headerList={headerList} />
+        {/* <HospitalTable headerList={headerList} /> */}
       </div>
     </section>
   )

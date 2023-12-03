@@ -81,13 +81,13 @@ const HospitalTable = ({ headerList, contents, links }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {contents.map(ele => (
-            <TableRow key={ele[0]}>
-              {ele.map(info => (
-                <TableCell key={info}>{info}</TableCell>
+          {contents.map((ele, idx) => (
+            <TableRow key={idx}>
+              {ele.map((info, idx) => (
+                <TableCell key={idx}>{info}</TableCell>
               ))}
               <TableCell className="flex justify-end">
-                <Link href={`http://localhost:3000/patients/op/${ele[0]}`} className="flex items-center gap-2 bg-primary text-white font-semibold px-2 py-1 rounded-full">
+                <Link href={links[idx]} className="flex items-center gap-2 bg-primary text-white font-semibold px-2 py-1 rounded-full">
                   Detail
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

@@ -67,7 +67,7 @@ const OutPatientPage = () => {
           </div>
         </main>
         <h2 className='text-4xl font-bold mt-4'>Medications</h2>
-        <HospitalTable headerList={headerList} />
+        {/* <HospitalTable headerList={headerList} /> */}
       </div>
     </section>
   )

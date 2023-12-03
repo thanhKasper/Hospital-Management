@@ -11,15 +11,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import axios from "axios";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const OutpatientPage = ({ params }) => {
-  const searchParams = useSearchParams()
-  const code = searchParams.get("opCode")
+  const router = useRouter()
   const [navActive, setnavActive] = useState("Patient");
   const headerList = ["OPCode", "Exam Date", "Next Exam Date", "Fee", ""];
   const [patientInfo, setPatientInfo] = useState({});
   const [examinationList, setExaminationList] = useState([]);
+  const [links, setLinks] = useState([])
   useEffect(() => {
     let opCode, ipCode;
     async function retrievePatientInfo() {
@@ -27,25 +27,43 @@ const OutpatientPage = ({ params }) => {
       const result = await axios.get(
         `http://localhost:3000/api/getPatient?id=${code}`
       );
-      const patientInfo = result.data.query[0]
-      opCode = result.data.opCode
-      ipCode = result.data.ipCode
-      patientInfo.ipCode = ipCode 
-      patientInfo.opCode = opCode
-      setPatientInfo(patientInfo)
+      console.log(result.data.query)
+      const patientInfo = result.data.query[0];
+      opCode = result.data.opCode;
+      ipCode = result.data.ipCode;
+      patientInfo.ipCode = ipCode || "N/A";
+      patientInfo.opCode = opCode || "N/A";
+      setPatientInfo(patientInfo);
     }
 
     async function getExaminationDetail() {
-      const res = await axios.get(`http://localhost:3000/api/examinations?opCode=${opCode}`)
-      const formattedExaminationList = []
-      for (let examination of res.data.query) {
-        formattedExaminationList.push([examination.ExaminationOPID, examination.Date, examination.NextDate, examination.Fee])
+      if (opCode) {
+        const res = await axios.get(
+          `http://localhost:3000/api/examinations?opCode=${opCode}`
+        );
+        const formattedExaminationList = [];
+        const detailLinks = [];
+        for (let examination of res.data.query) {
+          formattedExaminationList.push([
+            examination.ExaminationOPID,
+            examination.Date,
+            examination.NextDate,
+            examination.Fee,
+          ]);
+          detailLinks.push(
+            window.location.href + "/" + examination.ExaminationSeq
+          );
+        }
+        setLinks(detailLinks);
+        setExaminationList(formattedExaminationList);
+      } else {
+        setLinks([])
+        setExaminationList([])
       }
-      setExaminationList(formattedExaminationList)
+      
     }
 
     retrievePatientInfo().then(getExaminationDetail);
-    
   }, []);
 
   return (
@@ -104,7 +122,15 @@ const OutpatientPage = ({ params }) => {
         </main>
         <div className="flex items-center gap-3 mt-4">
           <h2 className="text-4xl font-semibold">History</h2>
-          <Select>
+          <Select
+            onValueChange={e => {
+              if (e == "Inpatient") {
+                router.push(`http://localhost:3000/patients/ip/${patientInfo.PSSN}`)
+              } else {
+                router.push(`http://localhost:3000/patients/op/${patientInfo.PSSN}`);
+              }
+            }}
+          >
             <SelectTrigger className="w-[120px] rounded-full bg-primary text-white font-bold focus-visible:ring-primary">
               <SelectValue placeholder="Outpatient" />
             </SelectTrigger>
@@ -114,7 +140,7 @@ const OutpatientPage = ({ params }) => {
             </SelectContent>
           </Select>
         </div>
-        <HospitalTable headerList={headerList} contents={examinationList} />
+        <HospitalTable headerList={headerList} contents={examinationList} links={links}/>
       </div>
     </section>
   );

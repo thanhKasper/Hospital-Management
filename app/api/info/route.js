@@ -3,7 +3,8 @@ import { formatDate } from '@/supportFunction'
 
 export async function GET(request) {
     const searchParams = request.nextUrl.searchParams
-    const outpatienCode = searchParams.get("opCode")
+    const inpatienCode = searchParams.get("ipCode")
+
     const connection = await mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -12,14 +13,15 @@ export async function GET(request) {
     })
 
     // Retrieve information about examination of an outpation
-    const [rows, fields] = await connection.execute("SELECT * FROM examination WHERE ExaminationOPID = ?", [outpatienCode])
+    const [rows, fields] = await connection.execute("SELECT * FROM info WHERE IPID = ?", [inpatienCode])
     for (let row of rows) {
-        row.Date = formatDate(row.Date)
-        row.NextDate = row.NextDate === null ? "N/A" : formatDate(row.NextDate)
+        row.AdmissionDate = formatDate(row.AdmissionDate)
+        row.DischargeDate = row.DischargeDate === null ? "N/A" : formatDate(row.DischargeDate)
         row.Fee = row.Fee === null ? "N/A" : row.Fee
     }
 
     connection.destroy()
+
     return Response.json({
         query: rows
     })

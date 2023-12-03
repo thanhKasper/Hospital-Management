@@ -7,7 +7,7 @@ const conn = mysql.createConnection({
     database: "hospital_management"
 })
 
-conn.query("SELECT * FROM patient", function(err, res, fields) {
+conn.query(`SELECT * from ipatient WHERE PSSN = ?;`, ["456789012345"], function(err, res, fields) {
     if (err) throw err
     console.log(res)
 })

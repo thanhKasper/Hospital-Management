@@ -25,7 +25,7 @@ export async function GET(request) {
     connection.destroy()
     return Response.json({
         query: rows,
-        ipCode: inPatientCode[0].IPCode,
-        opCode: outPatientCode[0].OPCode
+        ipCode: inPatientCode.length > 0 ? inPatientCode[0].IPCode : null,
+        opCode: outPatientCode.length > 0 ? outPatientCode[0].OPCode : null
     })
 }

@@ -35,7 +35,7 @@ const InpatientPage = ({ params }) => {
       setPatientInfo(patientInfo);
     }
 
-    async function getExaminationDetail() {
+    async function getInfoDetail() {
       if (ipCode) {
         const res = await axios.get(
           `http://localhost:3000/api/info?ipCode=${ipCode}`
@@ -53,6 +53,7 @@ const InpatientPage = ({ params }) => {
             window.location.href + "/" + info.InfoSeq
           );
         }
+        console.log(detailLinks)
         setInfoList(formattedInfoList);
         setLinks(detailLinks)
       } else {
@@ -61,7 +62,7 @@ const InpatientPage = ({ params }) => {
       }
     }
 
-    retrievePatientInfo().then(getExaminationDetail);
+    retrievePatientInfo().then(getInfoDetail);
   }, []);
 
   return (
@@ -142,7 +143,7 @@ const InpatientPage = ({ params }) => {
             </SelectContent>
           </Select>
         </div>
-        <HospitalTable headerList={headerList} contents={infoList} />
+        <HospitalTable headerList={headerList} contents={infoList} links={links} />
       </div>
     </section>
   );

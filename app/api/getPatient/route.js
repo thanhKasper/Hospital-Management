@@ -1,14 +1,9 @@
-import mysql from "mysql2/promise"
+import { connectToDb } from '@/lib/database'
 
 export async function GET(request) {
     const searchParams = request.nextUrl.searchParams
     const patientCode = searchParams.get("id")
-    const connection = await mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "admin",
-        database: "hospital_management"
-    })
+    const connection = await connectToDb()
     // Get patient info
     const [rows, fields] = await connection.execute(`SELECT * from patient WHERE PSSN = ?;`, [patientCode])
     const date = new Date(rows[0].BirthDate);

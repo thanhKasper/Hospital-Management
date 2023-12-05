@@ -23,16 +23,16 @@ const OutpatientPage = ({ params }) => {
   useEffect(() => {
     let opCode, ipCode
     async function retrievePatientInfo() {
-      const code = params.opcode
+      const code = params.ssn
       const result = await axios.get(
-        `http://localhost:3000/api/patients/op/${code}`
+        `http://localhost:3000/api/getPatient?id=${code}`
       )
       console.log(result.data.query)
       const patientInfo = result.data.query[0]
-      opCode = code
+      opCode = result.data.opCode
       ipCode = result.data.ipCode
       patientInfo.ipCode = ipCode || 'N/A'
-      patientInfo.opCode = code
+      patientInfo.opCode = opCode || 'N/A'
       setPatientInfo(patientInfo)
     }
 
@@ -135,9 +135,10 @@ const OutpatientPage = ({ params }) => {
             }}
           >
             <SelectTrigger className='w-[120px] rounded-full bg-primary text-white font-bold focus-visible:ring-primary'>
-              <SelectValue placeholder='Outpatient' />
+              <SelectValue placeholder='Choose' />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value='Choose'>Choose</SelectItem>
               <SelectItem
                 disabled={patientInfo.opCode === 'N/A'}
                 value='Outpatient'
@@ -153,11 +154,6 @@ const OutpatientPage = ({ params }) => {
             </SelectContent>
           </Select>
         </div>
-        <HospitalTable
-          headerList={headerList}
-          contents={examinationList}
-          links={links}
-        />
       </div>
     </section>
   )

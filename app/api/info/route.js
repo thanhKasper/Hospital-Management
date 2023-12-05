@@ -1,19 +1,14 @@
-import mysql from 'mysql2/promise'
 import { formatDate } from '@/supportFunction'
+import { connectToDb } from '@/lib/database'
 
 export async function GET(request) {
     const searchParams = request.nextUrl.searchParams
-    const inpatienCode = searchParams.get("ipCode")
+    const inpatientCode = searchParams.get("ipCode")
 
-    const connection = await mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "admin",
-        database: "hospital_management"
-    })
+    const connection = await connectToDb()
 
     // Retrieve information about examination of an outpation
-    const [rows, fields] = await connection.execute("SELECT * FROM info WHERE IPID = ?", [inpatienCode])
+    const [rows, fields] = await connection.execute("SELECT * FROM info WHERE IPID = ?", [inpatientCode])
     for (let row of rows) {
         row.AdmissionDate = formatDate(row.AdmissionDate)
         row.DischargeDate = row.DischargeDate === null ? "N/A" : formatDate(row.DischargeDate)

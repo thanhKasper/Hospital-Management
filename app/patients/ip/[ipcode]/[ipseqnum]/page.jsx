@@ -2,12 +2,39 @@
 
 import HospitalTable from '@/components/HospitalTable'
 import Sidebar from '@/components/sidebar'
-import { useState } from 'react'
-
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const InpatientPage = () => {
+  const [patientInfo, setPatientInfo] = useState({})
   const [navActive, setnavActive] = useState('Patient')
-  const headerList = ["IPCode", "Start date", "End date", "Status", ""];
+  const headerList = ['IPCode', 'Start date', 'End date', 'Status', '']
+  useEffect(() => {
+    let opCode, ipCode
+    async function retrievePatientInfo() {
+      const code = params.ipcode // Get the path parameter indicating patient SSN
+      const result = await axios.get(
+        `http://localhost:3000/api/patients/info?id=${code}`
+      )
+      const patientInfo = result.data.query[0]
+      opCode = result.data.opCode
+      ipCode = result.data.ipCode
+      patientInfo.ipCode = ipCode || 'N/A'
+      patientInfo.opCode = opCode || 'N/A'
+      setPatientInfo(patientInfo)
+    }
+    const getTreatments = async () => {
+      try {
+        const ipcode = params.ipcode
+        const ipseqnum = params.ipseqnum
+        const result = await axios.get(
+          `http://localhost:3000/api/patients/info/${ipcode}?seqnum=${ipseqnum}`
+        )
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  }, [])
   return (
     <section className='flex'>
       <Sidebar curNav={navActive} onSetActive={setnavActive} />
@@ -67,7 +94,7 @@ const InpatientPage = () => {
             </button>
           </div>
         </main>
-        <h2 className="text-4xl font-bold mt-4">Treatments</h2>
+        <h2 className='text-4xl font-bold mt-4'>Treatments</h2>
         <HospitalTable headerList={headerList} />
       </div>
     </section>

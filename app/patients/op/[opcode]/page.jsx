@@ -14,12 +14,12 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
 const OutpatientPage = ({ params }) => {
-  const router = useRouter()
-  const [navActive, setnavActive] = useState('Patient')
-  const headerList = ['OPCode', 'Exam Date', 'Next Exam Date', 'Fee', '']
-  const [patientInfo, setPatientInfo] = useState({})
-  const [examinationList, setExaminationList] = useState([])
-  const [links, setLinks] = useState([])
+  const router = useRouter();
+  const [navActive, setnavActive] = useState("Patient");
+  const headerList = ["OPCode", "Exam Date", "Next Exam Date", "Fee", ""];
+  const [patientInfo, setPatientInfo] = useState({});
+  const [examinationList, setExaminationList] = useState([]);
+  const [links, setLinks] = useState([]);
   useEffect(() => {
     let opCode, ipCode
     async function retrievePatientInfo() {
@@ -57,8 +57,8 @@ const OutpatientPage = ({ params }) => {
         setLinks(detailLinks)
         setExaminationList(formattedExaminationList)
       } else {
-        setLinks([])
-        setExaminationList([])
+        setLinks([]);
+        setExaminationList([]);
       }
     }
 
@@ -73,7 +73,10 @@ const OutpatientPage = ({ params }) => {
           <h1 className='font-semibold text-5xl text-primary'>
             Patient Details
           </h1>
-          <button className='flex items-center gap-3 bg-secondary px-4 rounded-full font-semibold text-white h-fit py-2'>
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-3 bg-secondary px-4 rounded-full font-semibold text-white h-fit py-2"
+          >
             <svg
               xmlns='http://www.w3.org/2000/svg'
               height='1em'

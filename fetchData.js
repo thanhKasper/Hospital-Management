@@ -1,13 +1,24 @@
-const mysql = require("mysql2")
+const mysql = require('mysql2')
 
 const conn = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "admin",
+    password: "",
     database: "hospital_management"
 })
 
-conn.query(`SELECT * from ipatient WHERE PSSN = ?;`, ["456789012345"], function(err, res, fields) {
-    if (err) throw err
-    console.log(res)
-})
+conn.execute(
+    `
+    SELECT *
+    FROM patient;
+    `,
+    function (err, rows, fields) {
+        if (err) throw err 
+        else {
+            console.log(rows)
+        }
+    }
+)
+
+
+conn.destroy()

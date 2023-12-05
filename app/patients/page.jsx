@@ -48,7 +48,6 @@ const PatientPage = () => {
       const searchPatient = await axios.get(
         `http://localhost:3000/api/searchPatient?query=${searchContent}`
       );
-      console.log(searchPatient.data)
       const query = searchPatient.data.query;
       const modifiedArr = [];
       const detailLinks = [];
@@ -63,26 +62,24 @@ const PatientPage = () => {
       }
       setPatientList(modifiedArr);
       setLinks(detailLinks);
-    } 
-    else if (filter == "Filter By Doctor") {
+    } else if (filter == "Filter By Doctor") {
       const searchDoctor = await axios.get(
         `http://localhost:3000/api/searchDoctor?query=${searchContent}`
       );
-        console.log(searchDoctor.data);
-        const query = searchDoctor.data.query;
-        const modifiedArr = [];
-        const detailLinks = [];
-        for (let patient of query) {
-          modifiedArr.push([
-            patient.PSSN,
-            patient.Fullname,
-            patient.PatPhoneNumber,
-            patient.Gender,
-          ]);
-          detailLinks.push(`http://localhost:3000/patients/op/${patient.PSSN}`);
-        }
-        setPatientList(modifiedArr);
-        setLinks(detailLinks);
+      const query = searchDoctor.data.query;
+      const modifiedArr = [];
+      const detailLinks = [];
+      for (let patient of query) {
+        modifiedArr.push([
+          patient.PSSN,
+          patient.Fullname,
+          patient.PatPhoneNumber,
+          patient.Gender,
+        ]);
+        detailLinks.push(`http://localhost:3000/patients/op/${patient.PSSN}`);
+      }
+      setPatientList(modifiedArr);
+      setLinks(detailLinks);
     }
   }
 

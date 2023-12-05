@@ -7,7 +7,7 @@ export async function GET(request) {
     const connection = await mysql.createConnection({
         host: "localhost",
         user: "root",
-        password: "admin",
+        password: "",
         database: "hospital_management"
     })
 

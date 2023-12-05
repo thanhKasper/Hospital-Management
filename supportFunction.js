@@ -11,7 +11,7 @@ export async function connectToDBAndQuery(query, params) {
     const conn = await mysql.createConnection({
         host: "localhost",
         user: "root",
-        password: "admin",
+        password: "",
         database: "hospital_management"
     })
 

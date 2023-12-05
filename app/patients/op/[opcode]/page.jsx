@@ -14,12 +14,12 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const OutpatientPage = ({ params }) => {
-  const router = useRouter()
+  const router = useRouter();
   const [navActive, setnavActive] = useState("Patient");
   const headerList = ["OPCode", "Exam Date", "Next Exam Date", "Fee", ""];
   const [patientInfo, setPatientInfo] = useState({});
   const [examinationList, setExaminationList] = useState([]);
-  const [links, setLinks] = useState([])
+  const [links, setLinks] = useState([]);
   useEffect(() => {
     let opCode, ipCode;
     async function retrievePatientInfo() {
@@ -27,7 +27,6 @@ const OutpatientPage = ({ params }) => {
       const result = await axios.get(
         `http://localhost:3000/api/getPatient?id=${code}`
       );
-      console.log(result.data.query)
       const patientInfo = result.data.query[0];
       opCode = result.data.opCode;
       ipCode = result.data.ipCode;
@@ -57,10 +56,9 @@ const OutpatientPage = ({ params }) => {
         setLinks(detailLinks);
         setExaminationList(formattedExaminationList);
       } else {
-        setLinks([])
-        setExaminationList([])
+        setLinks([]);
+        setExaminationList([]);
       }
-      
     }
 
     retrievePatientInfo().then(getExaminationDetail);
@@ -74,7 +72,10 @@ const OutpatientPage = ({ params }) => {
           <h1 className="font-semibold text-5xl text-primary">
             Patient Details
           </h1>
-          <button className="flex items-center gap-3 bg-secondary px-4 rounded-full font-semibold text-white h-fit py-2">
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-3 bg-secondary px-4 rounded-full font-semibold text-white h-fit py-2"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1em"
@@ -125,9 +126,13 @@ const OutpatientPage = ({ params }) => {
           <Select
             onValueChange={e => {
               if (e == "Inpatient") {
-                router.push(`http://localhost:3000/patients/ip/${patientInfo.PSSN}`)
+                router.push(
+                  `http://localhost:3000/patients/ip/${patientInfo.PSSN}`
+                );
               } else {
-                router.push(`http://localhost:3000/patients/op/${patientInfo.PSSN}`);
+                router.push(
+                  `http://localhost:3000/patients/op/${patientInfo.PSSN}`
+                );
               }
             }}
           >
@@ -140,7 +145,11 @@ const OutpatientPage = ({ params }) => {
             </SelectContent>
           </Select>
         </div>
-        <HospitalTable headerList={headerList} contents={examinationList} links={links}/>
+        <HospitalTable
+          headerList={headerList}
+          contents={examinationList}
+          links={links}
+        />
       </div>
     </section>
   );

@@ -4,10 +4,11 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import Sidebar from '@/components/sidebar'
 import HospitalTable from '@/components/HospitalTable'
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from 'axios'
 
 const OutPatientPage = () => {
+  const router = useRouter()
   const params = useParams();
   const [navActive, setnavActive] = useState('Patient')
   const headerList = ['Medication Code', 'Name', 'Price', '']
@@ -31,7 +32,6 @@ const OutPatientPage = () => {
 
       const res2 = await axios.get(`http://localhost:3000/api/exMedications?opCode=${opCode}&empCode=${empCode}&exId=${exId}`)
       const list = res2.data.query
-      console.log(list)
       const formatMed = []
       const linkArr = []
       for (let med of list) {
@@ -54,7 +54,7 @@ const OutPatientPage = () => {
           <h1 className="font-bold text-5xl text-primary">
             Examination Details
           </h1>
-          <button className="flex items-center gap-3 bg-secondary px-4 rounded-full font-semibold text-white h-fit py-2">
+          <button onClick={() => router.back()} className="flex items-center gap-3 bg-secondary px-4 rounded-full font-semibold text-white h-fit py-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1em"

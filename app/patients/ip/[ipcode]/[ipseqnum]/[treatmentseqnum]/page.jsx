@@ -2,11 +2,60 @@
 
 import HospitalTable from '@/components/HospitalTable'
 import Sidebar from '@/components/sidebar'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useSearchParams } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
-const InpatientPage = () => {
+const InpatientPage = ({ params }) => {
+  const searchParams = useSearchParams()
+  const doctorCode = searchParams.get('doctorCode')
+  if (!doctorCode) {
+    return notFound()
+  }
+  const [treatmentDetails, setTreatmentDetails] = useState({})
+  const [medicationList, setMedicationList] = useState([])
+  const [links, setLinks] = useState([])
   const [navActive, setnavActive] = useState('Patient')
   const headerList = ['Medication Code', 'Medication name', 'Price', '']
+  const [isTableLoading, setIsTableLoading] = useState(true)
+  useEffect(() => {
+    const ipcode = params.ipcode
+    const ipseqnum = params.ipseqnum
+    const treatmentseqnum = params.treatmentseqnum
+
+    async function getTreatmentDetails() {
+      const result = await axios.get(
+        `http://localhost:3000/api/treatments/${ipcode}/${ipseqnum}/${treatmentseqnum}?doctorCode=${doctorCode}`
+      )
+      const info = result.data.query[0]
+      setTreatmentDetails(info)
+    }
+    const getMedications = async () => {
+      try {
+        const result = await axios.get(
+          `http://localhost:3000/api/treatment-medication?ipCode=${ipcode}&doctorCode=${doctorCode}&treatmentseqnum=${treatmentseqnum}&ipseqnum=${ipseqnum}`
+        )
+        const formattedMedicationList = []
+        const detailLinks = []
+        console.log(result.data.query)
+        for (let medication of result.data.query) {
+          formattedMedicationList.push([
+            medication.TreatMedCode,
+            medication.MedName,
+            medication.Price,
+          ])
+          detailLinks.push(window.location.href + '/')
+        }
+        setLinks(detailLinks)
+        setMedicationList(formattedMedicationList)
+        setIsTableLoading(false)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    Promise.all([getTreatmentDetails(), getMedications()])
+  }, [])
   return (
     <section className='flex'>
       <Sidebar curNav={navActive} onSetActive={setnavActive} />
@@ -30,30 +79,28 @@ const InpatientPage = () => {
           </button>
         </div>
         <main className='flex justify-between mt-4'>
-          <div className='grid gap-x-20 grid-cols-2'>
-            <div className='grid gap-x-10 grid-cols-2'>
+          <div className='grid gap-x-10 grid-cols-2'>
+            <div className='grid grid-cols-3'>
               <p className='font-semibold'>IPCode:</p>
-              <p>123456789</p>
-              <p className='font-semibold'>Admission Date:</p>
-              <p>01/01/2023</p>
+              <p className='col-span-2'>{treatmentDetails.TreatmentIPID}</p>
               <p className='font-semibold'>Recovered:</p>
-              <p>Yes</p>
+              <p className='col-span-2'>{treatmentDetails.IsRecovered}</p>
               <p className='font-semibold'>Result:</p>
-              <p>Healthy</p>
+              <p className='col-span-2'>{treatmentDetails.Result}</p>
             </div>
-            <div className='grid gap-x-10 grid-cols-2 h-fit'>
+            <div className='grid grid-cols-3 h-fit'>
               <p className='font-semibold'>Start Date:</p>
-              <p>01/01/2023</p>
+              <p className='col-span-2'>{treatmentDetails.StartDate}</p>
               <p className='font-semibold'>End Date:</p>
-              <p>03/01/2023</p>
+              <p className='col-span-2'>{treatmentDetails.EndDate}</p>
             </div>
           </div>
           <div className='flex flex-col'>
             <div className='grid gap-x-3 grid-cols-2 h-fit'>
               <p className='font-semibold'>Doctor:</p>
-              <p>Nguyen Van A</p>
+              <p>{treatmentDetails.DoctorName}</p>
               <p className='font-semibold'>Doctor Code:</p>
-              <p>123456789</p>
+              <p>{treatmentDetails.TreatmentDoctorCode}</p>
             </div>
             <button className='flex gap-3 items-center bg-secondary font-semibold text-white px-5 py-1 mt-2 rounded-full w-fit'>
               See Doctor Detail
@@ -71,7 +118,15 @@ const InpatientPage = () => {
           </div>
         </main>
         <h2 className='text-4xl font-bold mt-4'>Medications</h2>
-        <HospitalTable headerList={headerList} />
+        {isTableLoading ? (
+          <p className='text-center text-lg font-bold'>Loading...</p>
+        ) : (
+          <HospitalTable
+            headerList={headerList}
+            contents={medicationList}
+            links={links}
+          />
+        )}
       </div>
     </section>
   )

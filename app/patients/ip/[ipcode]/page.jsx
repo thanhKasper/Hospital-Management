@@ -20,49 +20,40 @@ const InpatientPage = ({ params }) => {
   const [patientInfo, setPatientInfo] = useState({})
   const [infoList, setInfoList] = useState([])
   const [links, setLinks] = useState([])
+  const [isTableLoading, setIsTableLoading] = useState(true)
   useEffect(() => {
-    let opCode, ipCode
+    const ipcode = params.ipcode
+    let opCode
     async function retrievePatientInfo() {
-      const code = params.ipcode // Get the path parameter indicating patient SSN
       const result = await axios.get(
-        `http://localhost:3000/api/patients/ip/${code}`
+        `http://localhost:3000/api/patients/ip/${ipcode}`
       )
       const patientInfo = result.data.query[0]
-      ipCode = code
       opCode = result.data.opCode
-      patientInfo.ipCode = code
+      patientInfo.ipCode = ipcode
       patientInfo.opCode = opCode || 'N/A'
       setPatientInfo(patientInfo)
     }
 
     async function getInfoDetail() {
-      if (ipCode) {
-        const res = await axios.get(
-          `http://localhost:3000/api/info?ipCode=${ipCode}`
-        )
-        const formattedInfoList = []
-        const detailLinks = []
-        for (let info of res.data.query) {
-          formattedInfoList.push([
-            info.IPID,
-            info.AdmissionDate,
-            info.DischargeDate,
-            info.Fee,
-          ])
-          detailLinks.push(
-            window.location.href + '/' + info.InfoSeq + `?ipcode=${info.IPID}`
-          )
-        }
-        // console.log(detailLinks)
-        setInfoList(formattedInfoList)
-        setLinks(detailLinks)
-      } else {
-        setLinks([])
-        setInfoList([])
+      const res = await axios.get(`http://localhost:3000/api/info/${ipcode}`)
+      const formattedInfoList = []
+      const detailLinks = []
+      for (let info of res.data.query) {
+        formattedInfoList.push([
+          info.IPID,
+          info.AdmissionDate,
+          info.DischargeDate,
+          info.Fee,
+        ])
+        detailLinks.push(window.location.href + '/' + info.InfoSeq)
       }
+      // console.log(detailLinks)
+      setInfoList(formattedInfoList)
+      setLinks(detailLinks)
+      setIsTableLoading(false)
     }
-
-    retrievePatientInfo().then(getInfoDetail)
+    Promise.all([retrievePatientInfo(), getInfoDetail()])
   }, [])
 
   return (
@@ -96,7 +87,9 @@ const InpatientPage = ({ params }) => {
             <p className='font-semibold'>OPCode:</p>
             <p>{patientInfo.opCode}</p>
             <p className='font-semibold'>Full Name:</p>
-            <p>{patientInfo.FName + ' ' + patientInfo.LName}</p>
+            <p>
+              {patientInfo.FName} {patientInfo.LName}
+            </p>
           </div>
           <div className='flex flex-col'>
             <div className='grid grid-cols-3 h-fit'>
@@ -153,11 +146,15 @@ const InpatientPage = ({ params }) => {
             </SelectContent>
           </Select>
         </div>
-        <HospitalTable
-          headerList={headerList}
-          contents={infoList}
-          links={links}
-        />
+        {isTableLoading ? (
+          <p className='text-center text-lg font-bold'>Loading...</p>
+        ) : (
+          <HospitalTable
+            headerList={headerList}
+            contents={infoList}
+            links={links}
+          />
+        )}
       </div>
     </section>
   )

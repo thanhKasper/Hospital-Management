@@ -5,9 +5,12 @@ import React from 'react'
 import { useState } from 'react'
 
 const SearchBar = ({filterData, onFilter, searchData, onSearch, onShowData}) => {
-  
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    onShowData(searchData)
+  }
   return (
-    <div className="flex mt-4">
+    <form onSubmit={handleSubmit} className="flex mt-4">
       <FilterSearch filterData={filterData} onFilter={onFilter}/>
       <input
         onInput={(e) => {onSearch(e.target.value)}}
@@ -15,8 +18,8 @@ const SearchBar = ({filterData, onFilter, searchData, onSearch, onShowData}) => 
         type="text"
         placeholder="Search Information"
       />
-      <button onClick={() => {onShowData(searchData)}} className="bg-[#3A4EFD] text-white font-semibold px-4 rounded-e-3xl">Search</button>
-    </div>
+      <button type='submit' className="bg-[#3A4EFD] text-white font-semibold px-4 rounded-e-3xl">Search</button>
+    </form>
   );
 }
 

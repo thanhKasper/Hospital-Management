@@ -20,7 +20,7 @@ const PatientPage = () => {
   const headerList = ["SSN", "Fullname", "Phone Number", "Gender", ""];
   const [filter, setFilter] = useState("Filter By Patient"); // Filter By Patient | Filter By Doctor
   const [searchContent, setSearchContent] = useState("");
-
+  const [isTableLoading, setIsTableLoading] = useState(true)
   useEffect(() => {
     async function getPatients() {
       const res = await axios.get("http://localhost:3000/api/patients");
@@ -38,12 +38,14 @@ const PatientPage = () => {
       }
       setPatientList(modifiedArr);
       setLinks(detailLinks);
+      setIsTableLoading(false);
     }
 
     getPatients();
   }, []);
 
   async function showSearchResult(searchContent) {
+    setIsTableLoading(true);
     if (filter == "Filter By Patient") {
       const searchPatient = await axios.get(
         `http://localhost:3000/api/searchPatient?query=${searchContent}`
@@ -62,6 +64,7 @@ const PatientPage = () => {
       }
       setPatientList(modifiedArr);
       setLinks(detailLinks);
+      setIsTableLoading(false);
     } else if (filter == "Filter By Doctor") {
       const searchDoctor = await axios.get(
         `http://localhost:3000/api/searchDoctor?query=${searchContent}`
@@ -80,6 +83,7 @@ const PatientPage = () => {
       }
       setPatientList(modifiedArr);
       setLinks(detailLinks);
+      setIsTableLoading(false);
     }
   }
 
@@ -106,12 +110,14 @@ const PatientPage = () => {
           onSearch={setSearchContent}
           onShowData={showSearchResult}
         />
-
+        {isTableLoading ? (
+          <p className='text-center text-lg font-bold'>Loading...</p>
+        ) : (
         <HospitalTable
           headerList={headerList}
           contents={patientList}
           links={links}
-        />
+        />)}
       </div>
     </div>
   );

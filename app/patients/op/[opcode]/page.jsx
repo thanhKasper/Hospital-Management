@@ -14,12 +14,13 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
 const OutpatientPage = ({ params }) => {
-  const router = useRouter();
-  const [navActive, setnavActive] = useState("Patient");
-  const headerList = ["OPCode", "Exam Date", "Next Exam Date", "Fee", ""];
-  const [patientInfo, setPatientInfo] = useState({});
-  const [examinationList, setExaminationList] = useState([]);
-  const [links, setLinks] = useState([]);
+  const router = useRouter()
+  const [navActive, setnavActive] = useState('Patient')
+  const headerList = ['OPCode', 'Exam Date', 'Next Exam Date', 'Fee', '']
+  const [patientInfo, setPatientInfo] = useState({})
+  const [examinationList, setExaminationList] = useState([])
+  const [links, setLinks] = useState([])
+  const [isTableLoading, setIsTableLoading] = useState(true)
   useEffect(() => {
     let opCode, ipCode
     async function retrievePatientInfo() {
@@ -56,9 +57,10 @@ const OutpatientPage = ({ params }) => {
         }
         setLinks(detailLinks)
         setExaminationList(formattedExaminationList)
+        setIsTableLoading(false)
       } else {
-        setLinks([]);
-        setExaminationList([]);
+        setLinks([])
+        setExaminationList([])
       }
     }
 
@@ -75,7 +77,7 @@ const OutpatientPage = ({ params }) => {
           </h1>
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-3 bg-secondary px-4 rounded-full font-semibold text-white h-fit py-2"
+            className='flex items-center gap-3 bg-secondary px-4 rounded-full font-semibold text-white h-fit py-2'
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -99,7 +101,7 @@ const OutpatientPage = ({ params }) => {
             <p className='font-semibold'>OPCode:</p>
             <p>{patientInfo.opCode}</p>
             <p className='font-semibold'>Full Name:</p>
-            <p>{patientInfo.FName + ' ' + patientInfo.LName}</p>
+            <p>{patientInfo.FName} {patientInfo.LName}</p>
           </div>
           <div className='flex flex-col'>
             <div className='grid grid-cols-3 h-fit'>
@@ -156,11 +158,15 @@ const OutpatientPage = ({ params }) => {
             </SelectContent>
           </Select>
         </div>
-        <HospitalTable
-          headerList={headerList}
-          contents={examinationList}
-          links={links}
-        />
+        {isTableLoading ? (
+          <p className='text-center text-lg font-bold'>Loading...</p>
+        ) : (
+          <HospitalTable
+            headerList={headerList}
+            contents={examinationList}
+            links={links}
+          />
+        )}
       </div>
     </section>
   )

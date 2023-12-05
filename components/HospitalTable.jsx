@@ -27,7 +27,7 @@ const HospitalTable = ({ headerList, contents, links }) => {
       ) : (
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className='hover:bg-gray-300'>
               {headerList.map((ele, idx) => (
                 <TableHead
                   key={idx}
@@ -40,7 +40,7 @@ const HospitalTable = ({ headerList, contents, links }) => {
           </TableHeader>
           <TableBody>
             {contents.map((ele, idx) => (
-              <TableRow key={idx}>
+              <TableRow className='hover:bg-gray-200' key={idx}>
                 {ele.map((info, idx) => (
                   <TableCell key={idx}>{info}</TableCell>
                 ))}

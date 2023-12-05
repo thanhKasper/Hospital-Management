@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import React from 'react'
-import Sidebar from '@/components/sidebar'
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import axios from 'axios'
-import SearchBar from '@/components/SearchBar'
-import HospitalTable from '@/components/HospitalTable'
+import React from "react";
+import Sidebar from "@/components/sidebar";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import SearchBar from "@/components/SearchBar";
+import HospitalTable from "@/components/HospitalTable";
 
 const PatientPage = () => {
-  const router = useRouter()
+  const router = useRouter();
   {
     /* navActive has these value: "Doctor", "Nurse", "Patient" */
   }
@@ -31,10 +31,10 @@ const PatientPage = () => {
         modifiedArr.push([
           patient.PSSN,
           patient.Fullname,
-          patient.BirthDate,
+          patient.PatPhoneNumber,
           patient.Gender,
-        ])
-        detailLinks.push(`http://localhost:3000/patients/${patient.PSSN}`)
+        ]);
+        detailLinks.push(`http://localhost:3000/patients/${patient.PSSN}`);
       }
       setPatientList(modifiedArr);
       setLinks(detailLinks);
@@ -84,16 +84,16 @@ const PatientPage = () => {
   }
 
   return (
-    <div className='flex'>
+    <div className="flex">
       <Sidebar curNav={navActive} onSetActive={setnavActive} />
-      <div className='w-full px-8 pt-6'>
-        <div className='flex justify-between'>
-          <h1 className='font-bold text-5xl text-[#3A4EFD]'>Patients</h1>
+      <div className="w-full px-8 pt-6">
+        <div className="flex justify-between">
+          <h1 className="font-bold text-5xl text-[#3A4EFD]">Patients</h1>
           <button
             onClick={() => {
-              router.push('../add-patient')
+              router.push("../add-patient");
             }}
-            className='bg-yellow-400 hover:bg-yellow-500 px-4 rounded-md font-semibold'
+            className="bg-yellow-400 hover:bg-yellow-500 px-4 rounded-md font-semibold"
           >
             Add Patient
           </button>
@@ -114,7 +114,7 @@ const PatientPage = () => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PatientPage
+export default PatientPage;

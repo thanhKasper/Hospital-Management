@@ -7,7 +7,7 @@ export async function GET(request) {
     const exId = searchParams.get("exId")
 
     const res = await connectToDBAndQuery(
-        `select *
+        `select MedCode, MedName, Price
         from e_medication join medication on ExamMedCode = MedCode AND ExamMedProCode = MedProCode AND ExamMedPacketCode = MedPacketCode
         where ExamExaminationSeq = ? AND ExamExaminationDoctorCode = ? AND ExamExaminationOPID = ?;`,
         [exId, empCode, opCode]

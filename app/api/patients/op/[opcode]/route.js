@@ -14,7 +14,7 @@ export async function GET(request, { params }) {
   rows[0].BirthDate = newDateFormat
   rows[0].Gender = rows[0].Gender == 'F' ? 'Female' : 'Male'
   const ssn = rows[0].PSSN
-  // Get OP info if exist
+  // Get IP info if exist
   const [inPatientCode, ofields] = await connection.execute(
     `SELECT * from ipatient WHERE PSSN = ?;`,
     [ssn]

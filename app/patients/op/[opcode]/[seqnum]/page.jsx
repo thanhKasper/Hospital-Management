@@ -15,23 +15,24 @@ const OutPatientPage = () => {
   const [medList, setMedList] = useState([])
   const [links, setLinks] = useState([])
   const [examinationDetail, setExaminationDetail] = useState({})
-  const patientSSN = params.opcode 
+
+  // Get all path parameter from the link
+  const opCode = params.opcode 
   const examinationID = params.seqnum 
   
   useEffect(() => {
     async function retrieveExaminationDetail() {
-      const res = await axios.get(`http://localhost:3000/api/examinationDetail?exId=${examinationID}&ssn=${patientSSN}`)
+      const res = await axios.get(`http://localhost:3000/api/examinationDetail?exId=${examinationID}&opCode=${opCode}`)
       const detail = res.data.query 
+      // console.log(detail)
       setExaminationDetail(detail)
 
       // Retrieve list of medication needed
       // Foreign key for examination
-      const opCode = detail.OPCode 
-      const empCode = detail.EmpCode 
-      const exId = examinationID
-
-      const res2 = await axios.get(`http://localhost:3000/api/exMedications?opCode=${opCode}&empCode=${empCode}&exId=${exId}`)
+      const empCode = detail.ExaminationDoctorCode
+      const res2 = await axios.get(`http://localhost:3000/api/exMedications?opCode=${opCode}&empCode=${empCode}&exId=${examinationID}`)
       const list = res2.data.query
+      console.log(list)
       const formatMed = []
       const linkArr = []
       for (let med of list) {
@@ -72,7 +73,7 @@ const OutPatientPage = () => {
         <main className="flex justify-between mt-4">
           <div className="grid gap-x-10 grid-cols-2">
             <p className="font-semibold">OPCode:</p>
-            <p>{examinationDetail.OPCode}</p>
+            <p>{examinationDetail.ExaminationOPID}</p>
             <p className="font-semibold">Date:</p>
             <p>{examinationDetail.Date}</p>
             <p className="font-semibold">Re-examination Date:</p>
@@ -85,9 +86,9 @@ const OutPatientPage = () => {
           <div className="flex flex-col">
             <div className="grid gap-x-3 grid-cols-2 h-fit">
               <p className="font-semibold">Doctor Name:</p>
-              <p>{examinationDetail.FName + " " + examinationDetail.LName}</p>
+              <p>{examinationDetail.DocName}</p>
               <p className="font-semibold">Doctor Code:</p>
-              <p>{examinationDetail.EmpCode}</p>
+              <p>{examinationDetail.ExaminationDoctorCode}</p>
             </div>
             <button className="flex gap-3 items-center bg-secondary font-semibold text-white px-5 py-1 mt-2 rounded-full w-fit">
               See Doctor Detail

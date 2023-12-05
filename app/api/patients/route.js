@@ -8,7 +8,7 @@ export async function GET() {
         database: "hospital_management"
     })
 
-    const [rows, fields] = await conn.execute(`SELECT PSSN, CONCAT(Fname, ' ', Lname) as Fullname, BirthDate, Gender FROM patient`)
+    const [rows, fields] = await conn.execute(`SELECT PSSN, CONCAT(Fname, ' ', Lname) as Fullname, PatPhoneNumber, Gender FROM patient`)
     for (let record of rows) {
         const date = new Date(record.BirthDate);
         const options = { year: 'numeric', month: 'long', day: 'numeric' };

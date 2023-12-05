@@ -15,26 +15,76 @@ const PatientPage = () => {
   }
   const [navActive, setnavActive] = useState("Patient");
   const [patientList, setPatientList] = useState([]);
-  const [patientDetailLinks, setPatientDetailLinks] = useState()
-  const [links, setLinks] = useState([])
-  const headerList = ["SSN", "Fullname", "Birth Date", "Gender", ""];
+  const [patientDetailLinks, setPatientDetailLinks] = useState();
+  const [links, setLinks] = useState([]);
+  const headerList = ["SSN", "Fullname", "Phone Number", "Gender", ""];
+  const [filter, setFilter] = useState("Filter By Patient"); // Filter By Patient | Filter By Doctor
+  const [searchContent, setSearchContent] = useState("");
 
   useEffect(() => {
     async function getPatients() {
       const res = await axios.get("http://localhost:3000/api/patients");
-      const query = res.data.query
-      const modifiedArr = []
-      const detailLinks = []
+      const query = res.data.query;
+      const modifiedArr = [];
+      const detailLinks = [];
       for (let patient of query) {
-        modifiedArr.push([patient.PSSN, patient.Fullname, patient.BirthDate, patient.Gender])
-        detailLinks.push(`http://localhost:3000/patients/op/${patient.PSSN}`)
+        modifiedArr.push([
+          patient.PSSN,
+          patient.Fullname,
+          patient.PatPhoneNumber,
+          patient.Gender,
+        ]);
+        detailLinks.push(`http://localhost:3000/patients/op/${patient.PSSN}`);
       }
       setPatientList(modifiedArr);
-      setLinks(detailLinks)
+      setLinks(detailLinks);
     }
 
     getPatients();
   }, []);
+
+  async function showSearchResult(searchContent) {
+    if (filter == "Filter By Patient") {
+      const searchPatient = await axios.get(
+        `http://localhost:3000/api/searchPatient?query=${searchContent}`
+      );
+      console.log(searchPatient.data)
+      const query = searchPatient.data.query;
+      const modifiedArr = [];
+      const detailLinks = [];
+      for (let patient of query) {
+        modifiedArr.push([
+          patient.PSSN,
+          patient.Fullname,
+          patient.PatPhoneNumber,
+          patient.Gender,
+        ]);
+        detailLinks.push(`http://localhost:3000/patients/op/${patient.PSSN}`);
+      }
+      setPatientList(modifiedArr);
+      setLinks(detailLinks);
+    } 
+    else if (filter == "Filter By Doctor") {
+      const searchDoctor = await axios.get(
+        `http://localhost:3000/api/searchDoctor?query=${searchContent}`
+      );
+        console.log(searchDoctor.data);
+        const query = searchDoctor.data.query;
+        const modifiedArr = [];
+        const detailLinks = [];
+        for (let patient of query) {
+          modifiedArr.push([
+            patient.PSSN,
+            patient.Fullname,
+            patient.PatPhoneNumber,
+            patient.Gender,
+          ]);
+          detailLinks.push(`http://localhost:3000/patients/op/${patient.PSSN}`);
+        }
+        setPatientList(modifiedArr);
+        setLinks(detailLinks);
+    }
+  }
 
   return (
     <div className="flex">
@@ -51,8 +101,20 @@ const PatientPage = () => {
             Add Patient
           </button>
         </div>
-        <SearchBar />
-        <HospitalTable headerList={headerList} contents={patientList} links={links} />
+
+        <SearchBar
+          filterData={filter}
+          onFilter={setFilter}
+          searchData={searchContent}
+          onSearch={setSearchContent}
+          onShowData={showSearchResult}
+        />
+
+        <HospitalTable
+          headerList={headerList}
+          contents={patientList}
+          links={links}
+        />
       </div>
     </div>
   );

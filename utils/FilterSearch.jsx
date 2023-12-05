@@ -3,10 +3,8 @@
 import React from "react";
 import { useState } from "react";
 
-const FilterSearch = () => {
+const FilterSearch = ({filterData, onFilter}) => {
   const [isDropdown, setDropdown] = useState(false);
-  // Filter by patient: Filter By Patient, by doctor: Filter By Doctor
-  const [filterCriteria, setFilterCriteria] = useState("Filter By Patient");
 
   const selectionStyle = {
     position: "absolute",
@@ -25,7 +23,7 @@ const FilterSearch = () => {
           setDropdown(oldState => !oldState);
         }}
       >
-        <p className="text-white font-semibold">{filterCriteria}</p>
+        <p className="text-white font-semibold">{filterData}</p>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           height="1em"
@@ -44,7 +42,8 @@ const FilterSearch = () => {
         <li
           className="p-1 rounded-md mb-2 cursor-default hover:bg-primary hover:text-white"
           onClick={() => {
-            setFilterCriteria("Filter By Patient");
+            // setFilterCriteria("Filter By Patient");
+            onFilter("Filter By Patient")
             setDropdown(false);
           }}
         >
@@ -53,7 +52,7 @@ const FilterSearch = () => {
         <li
           className="p-1 rounded-md mb-2 cursor-default hover:bg-primary hover:text-white"
           onClick={() => {
-            setFilterCriteria("Filter By Doctor");
+            onFilter("Filter By Doctor");
             setDropdown(false);
           }}
         >

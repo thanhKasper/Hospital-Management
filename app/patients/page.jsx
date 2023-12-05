@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import SearchBar from "@/components/SearchBar";
 import HospitalTable from "@/components/HospitalTable";
+import Link from 'next/link'
 
 const PatientPage = () => {
   const router = useRouter();
@@ -93,14 +94,12 @@ const PatientPage = () => {
       <div className="w-full px-8 pt-6">
         <div className="flex justify-between">
           <h1 className="font-bold text-5xl text-[#3A4EFD]">Patients</h1>
-          <button
-            onClick={() => {
-              router.push("../add-patient");
-            }}
-            className="bg-yellow-400 hover:bg-yellow-500 px-4 rounded-md font-semibold"
+          <Link
+            href='/add-patient'
+            className="bg-yellow-400 hover:bg-yellow-500 px-4 rounded-md font-semibold flex items-center"
           >
             Add Patient
-          </button>
+          </Link>
         </div>
 
         <SearchBar

@@ -60,7 +60,7 @@ const PatientPage = () => {
           patient.PatPhoneNumber,
           patient.Gender,
         ]);
-        detailLinks.push(`http://localhost:3000/patients/op/${patient.PSSN}`);
+        detailLinks.push(`http://localhost:3000/patients/${patient.PSSN}`);
       }
       setPatientList(modifiedArr);
       setLinks(detailLinks);
@@ -79,7 +79,7 @@ const PatientPage = () => {
           patient.PatPhoneNumber,
           patient.Gender,
         ]);
-        detailLinks.push(`http://localhost:3000/patients/op/${patient.PSSN}`);
+        detailLinks.push(`http://localhost:3000/patients/${patient.PSSN}`);
       }
       setPatientList(modifiedArr);
       setLinks(detailLinks);

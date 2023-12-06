@@ -1,4 +1,5 @@
 import { connectToDb } from '@/lib/database'
+import formatDate from '@/lib/formatDate'
 
 export async function GET(request, { params }) {
   const patientCode = params.opcode
@@ -8,10 +9,16 @@ export async function GET(request, { params }) {
     `SELECT * from opatient natural join patient WHERE opcode = ?;`,
     [patientCode]
   )
-  const date = new Date(rows[0].BirthDate)
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
-  const newDateFormat = date.toLocaleDateString('en-US', options)
-  rows[0].BirthDate = newDateFormat
+
+  console.log(rows)
+
+  rows[0].Date = rows[0].Date == null ? 'N/A' : formatDate(rows[0].Date)
+  rows[0].NextDate = rows[0].NextDate == null ? 'N/A' : formatDate(rows[0].NextDate)
+
+  // const date = new Date(rows[0].BirthDate)
+  // const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  // const newDateFormat = date.toLocaleDateString('en-US', options)
+  // rows[0].BirthDate = newDateFormat
   rows[0].Gender = rows[0].Gender == 'F' ? 'Female' : 'Male'
   const ssn = rows[0].PSSN
   // Get IP info if exist

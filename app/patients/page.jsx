@@ -10,7 +10,6 @@ import HospitalTable from "@/components/HospitalTable";
 import Link from 'next/link'
 
 const PatientPage = () => {
-  const router = useRouter();
   {
     /* navActive has these value: "Doctor", "Nurse", "Patient" */
   }

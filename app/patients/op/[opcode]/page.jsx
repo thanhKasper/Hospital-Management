@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { AddExamModal } from '@/components/AddExamModal'
 
 const OutpatientPage = ({ params }) => {
   const router = useRouter()
@@ -118,9 +119,7 @@ const OutpatientPage = ({ params }) => {
               <button className='bg-accent font-semibold text-black px-5 py-2 mt-2 rounded-full w-fit hover:bg-accent/90'>
                 Add inpatient visit
               </button>
-              <button className='bg-accent font-semibold text-black px-5 py-2 mt-2 rounded-full w-fit hover:bg-accent/90'>
-                Add examination
-              </button>
+              <AddExamModal SSN={patientInfo.PSSN} OPCode={patientInfo.opCode}/>
             </div>
           </div>
         </main>

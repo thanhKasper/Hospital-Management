@@ -3,7 +3,6 @@
 import React from "react";
 import Sidebar from "@/components/sidebar";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 import SearchBar from "@/components/SearchBar";
 import HospitalTable from "@/components/HospitalTable";

@@ -53,7 +53,7 @@ const OutpatientPage = ({ params }) => {
             examination.Fee,
           ])
           detailLinks.push(
-            window.location.href + '/' + examination.ExaminationSeq
+            window.location.href + '/' + examination.ExaminationSeq + '?empCode=' + examination.ExaminationDoctorCode
           )
         }
         setLinks(detailLinks)

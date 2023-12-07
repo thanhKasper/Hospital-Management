@@ -4,12 +4,13 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import Sidebar from '@/components/sidebar'
 import HospitalTable from '@/components/HospitalTable'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import axios from 'axios'
 
 const OutPatientPage = () => {
   const router = useRouter()
   const params = useParams()
+  const queryStr = useSearchParams()
   const [navActive, setnavActive] = useState('Patient')
   const headerList = ['Medication Code', 'Name', 'Price', '']
   const [medList, setMedList] = useState([])
@@ -20,11 +21,12 @@ const OutPatientPage = () => {
   // Get all path parameter from the link
   const opCode = params.opcode
   const examinationID = params.seqnum
+  const docCode = queryStr.get('empCode')
 
   useEffect(() => {
     async function retrieveExaminationDetail() {
       const res = await axios.get(
-        `http://localhost:3000/api/examinationDetail?exId=${examinationID}&opCode=${opCode}`
+        `http://localhost:3000/api/examinationDetail?exId=${examinationID}&opCode=${opCode}&empCode=${docCode}`
       )
       const detail = res.data.query
       // console.log(detail)
@@ -37,7 +39,7 @@ const OutPatientPage = () => {
         `http://localhost:3000/api/exMedications?opCode=${opCode}&empCode=${empCode}&exId=${examinationID}`
       )
       const list = res2.data.query
-      console.log(list)
+      // console.log(list)
       const formatMed = []
       const linkArr = []
       for (let med of list) {

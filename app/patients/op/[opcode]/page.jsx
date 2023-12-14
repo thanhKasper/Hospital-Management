@@ -17,7 +17,7 @@ import { AddExamModal } from '@/components/AddExamModal'
 const OutpatientPage = ({ params }) => {
   const router = useRouter()
   const [navActive, setnavActive] = useState('Patient')
-  const headerList = ['OPCode', 'Exam Date', 'Next Exam Date', 'Fee', '']
+  const headerList = ['OPCode', 'Exam Date', 'Next Exam Date', '']
   const [patientInfo, setPatientInfo] = useState({})
   const [examinationList, setExaminationList] = useState([])
   const [links, setLinks] = useState([])
@@ -50,7 +50,7 @@ const OutpatientPage = ({ params }) => {
             examination.ExaminationOPID,
             examination.Date,
             examination.NextDate,
-            examination.Fee,
+            // examination.Fee,
           ])
           detailLinks.push(
             window.location.href + '/' + examination.ExaminationSeq + '?empCode=' + examination.ExaminationDoctorCode

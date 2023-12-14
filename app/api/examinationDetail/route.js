@@ -12,15 +12,24 @@ export async function GET(request) {
 
   const [rows, fields] = await conn.execute(
     `
-        SELECT ExaminationOPID, ExaminationDoctorCode, ExaminationDiagnosis, Date, Fee, NextDate, CONCAT(FName, ' ', LName) as DocName
-        FROM examination JOIN employee ON ExaminationDoctorCode = EmpCode 
-        WHERE ExaminationOPID = ? AND ExaminationSeq = ? AND ExaminationDoctorCode = ?;
-        `,
+    SELECT ExaminationOPID, Date, NextDate, ExaminationDiagnosis, Fee, SUM(Price * ExamMedQuantity) + Fee as TotalExpense, CONCAT(E.FName, ' ', E.LName) as DocName
+    FROM
+	    (examination EX JOIN employee E ON ExaminationDoctorCode = EmpCode)
+      LEFT JOIN
+      (e_medication as EM join medication M on EM.ExamMedCode = M.MedCode AND EM.ExamMedPacketCode = M.MedPacketCode AND EM.ExamMedProCode = M.MedProCode)
+      ON EX.ExaminationDoctorCode = EM.ExamExaminationDoctorCode AND
+        EX.ExaminationOPID = EM.ExamExaminationOPID AND
+        EX.ExaminationSeq = EM.ExamExaminationSeq
+    WHERE ExaminationOPID = ? AND ExaminationSeq = ? AND ExaminationDoctorCode = ?
+    GROUP BY ExamExaminationDoctorCode, ExamExaminationOPID, ExamExaminationSeq;
+    `,
     [opCode, exId, docCode]
   )
+  console.log(rows)
   for (let row of rows) {
     row.Date = row.Date === null ? 'N/A' : formatDate(row.Date)
     row.NextDate = row.NextDate === null ? 'N/A' : formatDate(row.NextDate)
+    row.TotalExpense = row.TotalExpense || row.Fee
   }
 
   conn.destroy()
@@ -29,6 +38,8 @@ export async function GET(request) {
     query: rows[0],
   })
 }
+
+
 export async function POST(req) {
   const { SSN, OPCode, doctorCode, diagnosis, fee, date, nextDate } =
     await req.json()

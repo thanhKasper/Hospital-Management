@@ -9,7 +9,7 @@ export async function GET(request) {
 
   const conn = await connectToDb()
   const [rows, fields] = await conn.execute(
-    'SELECT TreatMedCode, MedName, Price FROM T_Medication JOIN Medication ON TreatMedCode = MedCode AND TreatMedProCode = MedProCode AND TreatMedPacketCode = MedPacketCode WHERE TreatTreatmentIPID = ? AND TreatTreatmentInfoSeq = ? AND TreatTreatmentSeq = ? AND TreatTreatmentDoctorCode = ?',
+    'SELECT TreatMedCode, MedName, Price, TreatMedQuantity FROM T_Medication JOIN Medication ON TreatMedCode = MedCode AND TreatMedProCode = MedProCode AND TreatMedPacketCode = MedPacketCode WHERE TreatTreatmentIPID = ? AND TreatTreatmentInfoSeq = ? AND TreatTreatmentSeq = ? AND TreatTreatmentDoctorCode = ?',
     [ipCode, ipseqnum, treatmentseqnum, doctorCode]
   )
   conn.destroy()

@@ -12,7 +12,7 @@ const OutPatientPage = () => {
   const params = useParams()
   const queryStr = useSearchParams()
   const [navActive, setnavActive] = useState('Patient')
-  const headerList = ['Medication Code', 'Name', 'Price', '']
+  const headerList = ['Medication Code', 'Name', 'Price', 'Quantity (pill/vial)', '']
   const [medList, setMedList] = useState([])
   const [links, setLinks] = useState([])
   const [examinationDetail, setExaminationDetail] = useState({})
@@ -29,21 +29,20 @@ const OutPatientPage = () => {
         `http://localhost:3000/api/examinationDetail?exId=${examinationID}&opCode=${opCode}&empCode=${docCode}`
       )
       const detail = res.data.query
-      // console.log(detail)
+      console.log(detail)
       setExaminationDetail(detail)
 
       // Retrieve list of medication needed
       // Foreign key for examination
-      const empCode = detail.ExaminationDoctorCode
       const res2 = await axios.get(
-        `http://localhost:3000/api/exMedications?opCode=${opCode}&empCode=${empCode}&exId=${examinationID}`
+        `http://localhost:3000/api/exMedications?opCode=${opCode}&empCode=${docCode}&exId=${examinationID}`
       )
       const list = res2.data.query
       // console.log(list)
       const formatMed = []
       const linkArr = []
       for (let med of list) {
-        formatMed.push([med.MedCode, med.MedName, med.Price])
+        formatMed.push([med.MedCode, med.MedName, med.Price, med.ExamMedQuantity])
         linkArr.push('/')
       }
       setMedList(formatMed)
@@ -93,13 +92,15 @@ const OutPatientPage = () => {
             <p>{examinationDetail.ExaminationDiagnosis}</p>
             <p className='font-semibold'>Fee:</p>
             <p>{examinationDetail.Fee}</p>
+            <p className='font-semibold'>Total Fee (including medicine price):</p>
+            <p>{examinationDetail.TotalExpense}</p>
           </div>
           <div className='flex flex-col'>
             <div className='grid gap-x-3 grid-cols-2 h-fit'>
               <p className='font-semibold'>Doctor Name:</p>
               <p>{examinationDetail.DocName}</p>
               <p className='font-semibold'>Doctor Code:</p>
-              <p>{examinationDetail.ExaminationDoctorCode}</p>
+              <p>{docCode}</p>
             </div>
             <button className='flex gap-3 items-center bg-secondary font-semibold text-white px-5 py-1 mt-2 rounded-full w-fit'>
               See Doctor Detail

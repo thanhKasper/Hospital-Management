@@ -94,6 +94,8 @@ const InpatientPage = ({ params }) => {
             <p>{infoDetails.InfoDiagnosis}</p>
             <p className="font-semibold">Fee:</p>
             <p>{infoDetails.Fee}</p>
+            <p className="font-semibold">Total Fee (including medicine price):</p>
+            <p>{infoDetails.TotalVisitMedPrice}</p>
           </div>
           <div className="flex flex-col">
             <div className="grid gap-x-3 grid-cols-2 h-fit">

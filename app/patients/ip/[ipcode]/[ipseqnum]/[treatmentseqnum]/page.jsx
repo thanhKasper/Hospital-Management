@@ -19,7 +19,7 @@ const InpatientPage = ({ params }) => {
   const [medicationList, setMedicationList] = useState([])
   const [links, setLinks] = useState([])
   const [navActive, setnavActive] = useState('Patient')
-  const headerList = ['Medication Code', 'Medication name', 'Price', '']
+  const headerList = ['Medication Code', 'Medication name', 'Price', 'Quantity', '']
   const [isTableLoading, setIsTableLoading] = useState(true)
   useEffect(() => {
     const ipcode = params.ipcode
@@ -46,6 +46,7 @@ const InpatientPage = ({ params }) => {
             medication.TreatMedCode,
             medication.MedName,
             medication.Price,
+            medication.TreatMedQuantity,
           ])
           detailLinks.push(window.location.href + '/')
         }
@@ -92,6 +93,8 @@ const InpatientPage = ({ params }) => {
               <p className="col-span-2">{treatmentDetails.IsRecovered}</p>
               <p className="font-semibold">Result:</p>
               <p className="col-span-2">{treatmentDetails.Result}</p>
+              <p className="font-semibold">Medication Price:</p>
+              <p className="col-span-2">{treatmentDetails.TotalMedPrice}</p>
             </div>
             <div className="grid grid-cols-3 h-fit">
               <p className="font-semibold">Start Date:</p>

@@ -12,7 +12,12 @@ export async function GET(request, { params }) {
 
   // Retrieve information about examination of an outpation
   const [rows, fields] = await connection.execute(
-    'SELECT TreatmentDoctorCode, TreatmentIPID, TreatmentSeq, IsRecovered, t.StartDate, t.EndDate, Result, CONCAT(FName, " ", LName) AS DoctorName FROM treatment t JOIN Employee e ON TreatmentDoctorCode = EmpCode WHERE TreatmentIPID = ? AND TreatmentInfoSeq = ? AND TreatmentSeq = ? AND TreatmentDoctorCode = ?',
+    `SELECT TreatmentDoctorCode, TreatmentIPID, TreatmentSeq, IsRecovered, t.StartDate, t.EndDate, Result, CONCAT(FName, " ", LName) AS DoctorName, SUM(m.Price * tm.TreatMedQuantity) as TotalMedPrice 
+    FROM treatment t 
+    JOIN Employee e ON TreatmentDoctorCode = EmpCode 
+    JOIN T_Medication tm ON e.EmpCode = tm.TreatTreatmentDoctorCode AND t.TreatmentInfoSeq = tm.TreatTreatmentInfoSeq AND t.TreatmentIPID = tm.TreatTreatmentIPID AND t.TreatmentSeq = tm.TreatTreatmentSeq
+    JOIN Medication m ON tm.TreatMedCode = m.MedCode AND tm.TreatMedProCode = m.MedProCode AND tm.TreatMedPacketCode = m.MedPacketCode 
+    WHERE TreatmentIPID = ? AND TreatmentInfoSeq = ? AND TreatmentSeq = ? AND TreatmentDoctorCode = ?`,
     [inpatientCode, ipseqnum, treatmentseqnum, doctorCode]
   )
   rows[0].StartDate = formatDate(rows[0].StartDate)

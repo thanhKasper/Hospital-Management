@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation'
 const InpatientPage = ({ params }) => {
   const router = useRouter()
   const [navActive, setnavActive] = useState('Patient')
-  const headerList = ['IPCode', 'Admission date', 'Discharge date', 'Fee', '']
+  const headerList = ['IPCode', 'Admission date', 'Discharge date', '']
   const [patientInfo, setPatientInfo] = useState({})
   const [infoList, setInfoList] = useState([])
   const [links, setLinks] = useState([])
@@ -44,7 +44,6 @@ const InpatientPage = ({ params }) => {
           info.IPID,
           info.AdmissionDate,
           info.DischargeDate,
-          info.Fee,
         ])
         detailLinks.push(window.location.href + '/' + info.InfoSeq)
       }

@@ -15,8 +15,8 @@ export async function GET(request, { params }) {
     `SELECT TreatmentDoctorCode, TreatmentIPID, TreatmentSeq, IsRecovered, t.StartDate, t.EndDate, Result, CONCAT(FName, " ", LName) AS DoctorName, SUM(m.Price * tm.TreatMedQuantity) as TotalMedPrice 
     FROM treatment t 
     JOIN Employee e ON TreatmentDoctorCode = EmpCode 
-    JOIN T_Medication tm ON e.EmpCode = tm.TreatTreatmentDoctorCode AND t.TreatmentInfoSeq = tm.TreatTreatmentInfoSeq AND t.TreatmentIPID = tm.TreatTreatmentIPID AND t.TreatmentSeq = tm.TreatTreatmentSeq
-    JOIN Medication m ON tm.TreatMedCode = m.MedCode AND tm.TreatMedProCode = m.MedProCode AND tm.TreatMedPacketCode = m.MedPacketCode 
+    LEFT JOIN T_Medication tm ON e.EmpCode = tm.TreatTreatmentDoctorCode AND t.TreatmentInfoSeq = tm.TreatTreatmentInfoSeq AND t.TreatmentIPID = tm.TreatTreatmentIPID AND t.TreatmentSeq = tm.TreatTreatmentSeq
+    LEFT JOIN Medication m ON tm.TreatMedCode = m.MedCode AND tm.TreatMedProCode = m.MedProCode AND tm.TreatMedPacketCode = m.MedPacketCode 
     WHERE TreatmentIPID = ? AND TreatmentInfoSeq = ? AND TreatmentSeq = ? AND TreatmentDoctorCode = ?`,
     [inpatientCode, ipseqnum, treatmentseqnum, doctorCode]
   )
@@ -24,7 +24,10 @@ export async function GET(request, { params }) {
   rows[0].EndDate =
     rows[0].EndDate === null ? 'N/A' : formatDate(rows[0].EndDate)
   rows[0].Result = rows[0].Fee === null ? 'N/A' : rows[0].Result
-  rows[0].IsRecovered = true ? 'Recovered' : 'Not recovered'
+  rows[0].IsRecovered =
+    rows[0].IsRecovered === true ? 'Recovered' : 'Not recovered'
+  rows[0].TotalMedPrice =
+    rows[0].TotalMedPrice === null ? 'N/A' : rows[0].TotalMedPrice
 
   connection.destroy()
 

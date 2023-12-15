@@ -26,16 +26,27 @@ import { useRouter } from 'next/navigation'
 export function AddExamModal({ SSN, OPCode }) {
   const router = useRouter()
   const [doctorCode, setDoctorCode] = useState(-1)
-  const [diagnosis, setDiagnosis] = useState(null)
+  const [diagnosis, setDiagnosis] = useState('')
   const [fee, setFee] = useState(null)
   const [date, setDate] = useState(new Date().toJSON().slice(0, 10))
+  const [minDate, setMinDate] = useState(new Date())
   const [nextDate, setNextDate] = useState(null)
   const [doctors, setDoctors] = useState([])
   const [errorMessage, setErrorMessage] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
+  useEffect(() => {
+    const cur = new Date(date)
+    cur.setDate(cur.getDate() + 1)
+    setMinDate(cur.toJSON().slice(0, 10))
+  }, [date])
   const handleSubmit = async (e) => {
-    setIsProcessing(true)
     e.preventDefault()
+    setIsProcessing(true)
+    if (nextDate && nextDate <= date || diagnosis.length === 0 || doctorCode === -1) {
+      setErrorMessage('Invalid inputs')
+      setIsProcessing(false)
+      return
+    }
     try {
       const res = await axios.post(
         'http://localhost:3000/api/examinationDetail',
@@ -51,7 +62,9 @@ export function AddExamModal({ SSN, OPCode }) {
       )
       const op = res.data.op
       const seq = res.data.seq
-      router.push(`http://localhost:3000/patients/op/${op}/${seq}`)
+      router.push(
+        `http://localhost:3000/patients/op/${op}/${seq}?empCode=${doctorCode}`
+      )
     } catch (err) {
       setIsProcessing(false)
       setErrorMessage(`${err.response.data.error}`)
@@ -154,12 +167,15 @@ export function AddExamModal({ SSN, OPCode }) {
               <br />
               <input
                 type='date'
+                min={minDate}
                 className='h-10 rounded-md px-3 bg-input focus:outline-ring focus:outline-offset-2 focus:outline-2 w-full'
                 onChange={(e) => setNextDate(e.target.value)}
               />
             </div>
           </div>
-          <Button type='submit'>Submit</Button>
+          <Button type='submit' disabled={isProcessing}>
+            Submit
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

@@ -17,6 +17,18 @@ export async function GET() {
 
 export async function POST(req) {
   const { fname, lname, SSN, phone, dob, address, gender } = await req.json()
+  const regex = /^[0-9]+$/
+  const today = new Date().toJSON().slice(0, 10)
+  if (
+    phone.length !== 10 ||
+    !regex.test(phone) ||
+    dob > today ||
+    SSN.length !== 12 ||
+    !regex.test(SSN) ||
+    (gender !== 'M' && gender !== 'F')
+  ) {
+    return Response.json({ error: `Invalid inputs` }, { status: 400 })
+  }
   const conn = await connectToDb()
   try {
     await conn.execute(

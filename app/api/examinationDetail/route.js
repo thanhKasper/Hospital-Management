@@ -39,12 +39,14 @@ export async function GET(request) {
   })
 }
 
-
 export async function POST(req) {
   const { SSN, OPCode, doctorCode, diagnosis, fee, date, nextDate } =
     await req.json()
   console.log(OPCode, doctorCode, diagnosis, fee, date, nextDate)
   let op, seq
+  if (nextDate && nextDate < date) {
+    return Response.json({ error: `Invalid inputs` }, { status: 400 })
+  }
   const conn = await connectToDb()
   if (!OPCode) {
     const [rows, fields] = await conn.execute(

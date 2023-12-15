@@ -25,8 +25,22 @@ const AddPatientForm = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
   const handleSubmit = async (e) => {
-    setIsProcessing(true)
     e.preventDefault()
+    setIsProcessing(true)
+    const regex = /^[0-9]+$/
+    const today = new Date().toJSON().slice(0, 10)
+    if (
+      phoneNumber.length !== 10 ||
+      !regex.test(phoneNumber) ||
+      DOB > today ||
+      SSN.length !== 12 ||
+      !regex.test(SSN)
+    ) {
+      setErrorMessage('Invalid inputs')
+      setIsProcessing(false)
+      return
+    }
+
     try {
       const res = await axios.post('http://localhost:3000/api/patients', {
         fname: firstName,
@@ -114,6 +128,7 @@ const AddPatientForm = () => {
           SSN
         </label>
         <Input
+          pattern='[0-9]*'
           minLength={12}
           maxLength={12}
           required
